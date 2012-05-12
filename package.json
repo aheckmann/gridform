@@ -3,6 +3,7 @@
   "name": "gridform",
   "description": "Stream formidable uploads into MongoDB GridFS",
   "version": "0.0.1",
+  "keywords": ["gridfs", "formidable", "mongodb", "upload", "file"],
   "scripts": {
     "test": "make test"
   },
