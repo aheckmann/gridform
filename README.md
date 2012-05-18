@@ -61,7 +61,7 @@ Available options:
   - db: an open [node-mongodb-native](https://github.com/mongodb/node-mongodb-native) db instance
   - filename: function
 
-The optional `filename` function is passed the `file.name` before streaming to MongoDB providing an opportunity to customize the filename with a prefix etc.
+The optional `filename` function is passed the `file.name` before streaming to MongoDB providing an opportunity to return a customized filename with a prefix etc.
 
 The `db` is required unless you've specified it on `gridform` itself.
 
