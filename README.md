@@ -20,6 +20,11 @@ var app = http.Server(function (req, res) {
   // returns a custom IncomingForm
   assert(form instanceof formidable.IncomingForm);
 
+  // optionally store per-file metadata
+  form.on('fileBegin', function (name, file) {
+    file.metadata = 'so meta'
+  })
+
   // parse normally
   form.parse(req, function (err, fields, files) {
 
