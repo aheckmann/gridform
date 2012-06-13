@@ -6,10 +6,12 @@
 Example:
 
 ```js
+var mongo = require('mongo')`
 var gridform = require('gridform');
 
 // assuming you've already created a db instance and opened it
 gridform.db = db;
+gridform.mongo = mongo;
 
 // in your http server
 var app = http.Server(function (req, res) {
@@ -57,22 +59,24 @@ The module exports a single function which takes an options object.
 
 ```js
 var gridform = require('gridform');
-var options = { db: db, filename: fn };
+var options = { db: db, mongo: mongo, filename: fn };
 var form = gridform(options);
 ```
 
 Available options:
 
   - db: an open [node-mongodb-native](https://github.com/mongodb/node-mongodb-native) db instance
+  - mongo: the [node-mongodb-native](https://github.com/mongodb/node-mongodb-native) driver you are using
   - filename: function
 
 The optional `filename` function is passed the `file.name` before streaming to MongoDB providing an opportunity to return a customized filename with a prefix etc.
 
-The `db` is required unless you've specified it on `gridform` itself.
+`db` and `mongo` are required unless you've specified them on `gridform` itself.
 
 ```js
 var gridform = require('gridform');
 gridform.db = db;
+gridform.mongo = mongo;
 var form = gridform(); // all good
 ```
 
