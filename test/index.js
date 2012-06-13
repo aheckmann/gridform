@@ -40,25 +40,41 @@ describe('gridform', function(){
           e = err;
         }
         assert(e);
+        try {
+        var form = gridform({ mongo: mongo });
+        } catch (err) {
+          e = err;
+        }
+        assert(e);
+      })
+      it('should expect a driver', function(){
+        var e;
+        try {
+        var form = gridform({ db: 1 });
+        } catch (err) {
+          e = err;
+        }
+        assert(e);
       })
       it('should be a formidable.IncomingForm', function(){
-        var form = gridform({ db: db });
+        var form = gridform({ db: db, mongo: mongo });
         assert(form instanceof formidable.IncomingForm)
       })
 
       describe('options', function(){
-        it('should not assign db and filename to the form', function(){
-          var form = gridform({ db: 1, filename: function(){}, x: true });
+        it('should not assign db, filename, or mongo to the form', function(){
+          var form = gridform({ db: 1, mongo: mongo, filename: function(){}, x: true });
           assert.equal(form.x, undefined);
           assert.equal('undefined', typeof form.db)
+          assert.equal('undefined', typeof form.mongo)
           assert.equal('undefined', typeof form.filename)
         })
         it('__filename', function(){
-          var form = gridform({db:db});
+          var form = gridform({db:db, mongo: mongo});
           assert(form.__filename);
           assert.equal('function', typeof form.__filename);
           assert.equal(4, form.__filename(4));
-          form = gridform({ db: db, filename: function(){return 2} });
+          form = gridform({ db: db, mongo: mongo, filename: function(){return 2} });
           assert.equal(2, form.__filename(4));
         });
       })
@@ -84,7 +100,7 @@ describe('gridform', function(){
         it('should set the body', function (done) {
 
           fn = function (req, res, next) {
-            var form = gridform({ db: db });
+            var form = gridform({ db: db, mongo: mongo });
             var self = this;
             form.parse(req, function (err, fields, files) {
               if (err) return done(err);
@@ -108,7 +124,7 @@ describe('gridform', function(){
 
         it('should support files', function(done){
           fn = function (req, res, next) {
-            var form = gridform({ db: db });
+            var form = gridform({ db: db, mongo: mongo });
             form.parse(req, function (err, fields, files) {
               if (err) return done(err);
               assert.equal(fields['user[name]'], 'Tobi');
@@ -138,7 +154,7 @@ describe('gridform', function(){
 
         it('should store metadata', function(done){
           fn = function (req, res, next) {
-            var form = gridform({ db: db });
+            var form = gridform({ db: db, mongo: mongo });
             form.on('fileBegin', function (name, file) {
               file.metadata = { meta: name };
             });
@@ -167,7 +183,7 @@ describe('gridform', function(){
         });
         it('should work with multiple fields', function(done){
           fn = function (req, res, next) {
-            var form = gridform({ db: db });
+            var form = gridform({ db: db, mongo: mongo });
             form.parse(req, function (err, fields, files) {
               if (err) return done(err);
               assert.equal(0, Object.keys(files).length);
@@ -194,7 +210,7 @@ describe('gridform', function(){
 
         it('should support multiple files of the same name', function(done){
           fn = function(req, res){
-            var form = gridform({ db: db });
+            var form = gridform({ db: db, mongo: mongo });
             form.parse(req, function (err, fields, files) {
               assert.equal(err.message,'parser error, 16 of 28 bytes parsed');
               res.statusCode = 500;
