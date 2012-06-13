@@ -1,4 +1,10 @@
 
+0.1.0 / 06-13-2012
+==================
+
+  * fixed; issues related to conflicting driver versions (#3)
+  * updated; node-formidable and gridfs-stream dependencies
+
 0.0.3 / 05-24-2012
 ==================
 
