@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Gridform : Stream formidable uploads into MongoDB GridFS" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Gridform</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/aheckmann/gridform">View on GitHub</a>
+
+          <h1 id="project_title">Gridform</h1>
+          <h2 id="project_tagline">Stream formidable uploads into MongoDB GridFS</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/aheckmann/gridform/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/aheckmann/gridform/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><a href="https://github.com/felixge/node-formidable">Formidable</a> streams uploads to the file system by default. If you're using GridFS to store files you'll then need to turn around and copy them off of the file system. Using <code>gridform</code> removes this burden.</p>
+
+<p>Example:</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">mongo</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'mongo'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">gridform</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gridform'</span><span class="p">);</span>
+
+<span class="c1">// assuming you've already created a db instance and opened it</span>
+<span class="nx">gridform</span><span class="p">.</span><span class="nx">db</span> <span class="o">=</span> <span class="nx">db</span><span class="p">;</span>
+<span class="nx">gridform</span><span class="p">.</span><span class="nx">mongo</span> <span class="o">=</span> <span class="nx">mongo</span><span class="p">;</span>
+
+<span class="c1">// in your http server</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">http</span><span class="p">.</span><span class="nx">Server</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="c1">// create a gridform</span>
+  <span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nx">gridform</span><span class="p">();</span>
+
+  <span class="c1">// returns a custom IncomingForm</span>
+  <span class="nx">assert</span><span class="p">(</span><span class="nx">form</span> <span class="k">instanceof</span> <span class="nx">formidable</span><span class="p">.</span><span class="nx">IncomingForm</span><span class="p">);</span>
+
+  <span class="c1">// optionally store per-file metadata</span>
+  <span class="nx">form</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">'fileBegin'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">metadata</span> <span class="o">=</span> <span class="s1">'so meta'</span>
+  <span class="p">})</span>
+
+  <span class="c1">// parse normally</span>
+  <span class="nx">form</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">fields</span><span class="p">,</span> <span class="nx">files</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="c1">// use files and fields as you do today</span>
+    <span class="kd">var</span> <span class="nx">file</span> <span class="o">=</span> <span class="nx">files</span><span class="p">.</span><span class="nx">upload</span><span class="p">;</span>
+
+    <span class="nx">file</span><span class="p">.</span><span class="nx">name</span> <span class="c1">// the uploaded file name</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">type</span> <span class="c1">// file type per [mime](https://github.com/bentomas/node-mime)</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">size</span> <span class="c1">// uploaded file size (file length in GridFS) named "size" for compatibility</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">path</span> <span class="c1">// same as file.name. included for compatibility</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">lastModified</span> <span class="c1">// included for compatibility</span>
+
+    <span class="c1">// files contain additional gridfs info</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">root</span> <span class="c1">// the root of the files collection used in MongoDB ('fs' here means the full collection in mongo is named 'fs.files')</span>
+    <span class="nx">file</span><span class="p">.</span><span class="nx">id</span>   <span class="c1">// the ObjectId for this file</span>
+
+  <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+</div>
+
+
+<h2>install</h2>
+
+<pre><code>npm install gridform
+</code></pre>
+
+<h2>exports</h2>
+
+<p>The module exports a single function which takes an options object.</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">gridform</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gridform'</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">db</span><span class="o">:</span> <span class="nx">db</span><span class="p">,</span> <span class="nx">mongo</span><span class="o">:</span> <span class="nx">mongo</span><span class="p">,</span> <span class="nx">filename</span><span class="o">:</span> <span class="nx">fn</span> <span class="p">};</span>
+<span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nx">gridform</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+</pre>
+</div>
+
+
+<p>Available options:</p>
+
+<ul>
+<li>db: an open <a href="https://github.com/mongodb/node-mongodb-native">node-mongodb-native</a> db instance</li>
+<li>mongo: the <a href="https://github.com/mongodb/node-mongodb-native">node-mongodb-native</a> driver you are using</li>
+<li>filename: function</li>
+</ul><p>The optional <code>filename</code> function is passed the <code>file.name</code> before streaming to MongoDB providing an opportunity to return a customized filename with a prefix etc.</p>
+
+<p><code>db</code> and <code>mongo</code> are required unless you've specified them on <code>gridform</code> itself.</p>
+
+<div class="highlight">
+<pre><span class="kd">var</span> <span class="nx">gridform</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'gridform'</span><span class="p">);</span>
+<span class="nx">gridform</span><span class="p">.</span><span class="nx">db</span> <span class="o">=</span> <span class="nx">db</span><span class="p">;</span>
+<span class="nx">gridform</span><span class="p">.</span><span class="nx">mongo</span> <span class="o">=</span> <span class="nx">mongo</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">form</span> <span class="o">=</span> <span class="nx">gridform</span><span class="p">();</span> <span class="c1">// all good</span>
+</pre>
+</div>
+
+
+<p>The gridform function returns an instance of <code>formidable.IncomingForm</code> so you can process uploads without changing any code.</p>
+
+<h2>tests</h2>
+
+<p>Run the tests with <code>make test</code>.</p>
+
+<p><a href="https://github.com/aheckmann/gridform/blob/master/LICENSE">LICENCE</a></p>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Gridform maintained by <a href="https://github.com/aheckmann">aheckmann</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31745730-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
