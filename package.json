@@ -17,5 +17,9 @@
   "optionalDependencies": {},
   "engines": {
     "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/aheckmann/gridform.git"
   }
 }
