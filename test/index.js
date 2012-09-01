@@ -130,7 +130,16 @@ describe('gridform', function(){
               assert.equal(fields['user[name]'], 'Tobi');
               assert(files.text.path);
               assert.equal('File', files.text.constructor.name);
-              res.end(files.text.name);
+
+              // https://github.com/aheckmann/gridform/issues/1
+              db.collection('fs.files', function (err, coll) {
+                assert.ifError(err);
+                coll.findOne({ _id: files.text.id }, function (err, doc) {
+                  assert.ifError(err);
+                  assert.ok(doc);
+                  res.end(files.text.name);
+                })
+              })
             });
           }
 
