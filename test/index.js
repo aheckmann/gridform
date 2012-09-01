@@ -181,6 +181,7 @@ describe('gridform', function(){
             done();
           });
         });
+
         it('should work with multiple fields', function(done){
           fn = function (req, res, next) {
             var form = gridform({ db: db, mongo: mongo });
