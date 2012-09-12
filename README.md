@@ -6,7 +6,7 @@
 Example:
 
 ```js
-var mongo = require('mongo')`
+var mongo = require('mongo')
 var gridform = require('gridform');
 
 // assuming you've already created a db instance and opened it
