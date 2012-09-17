@@ -26,6 +26,12 @@ describe('gridform', function(){
     });
   });
 
+  describe('gridfsStream', function(){
+    it('is exposed', function(){
+      assert.ok('function' == typeof gridform.gridfsStream);
+    })
+  })
+
   describe('exports.', function(){
     it('should be a fn', function(){
       assert('function' == typeof gridform)
