@@ -55,7 +55,7 @@ npm install gridform
 
 ## exports
 
-The module exports a single function which takes an options object.
+The module exports a function which takes an options object.
 
 ```js
 var gridform = require('gridform');
@@ -81,6 +81,10 @@ var form = gridform(); // all good
 ```
 
 The gridform function returns an instance of `formidable.IncomingForm` so you can process uploads without changing any code.
+
+## gridfs-stream
+
+This module utilizes the [gridfs-stream](https://github.com/aheckmann/gridfs-stream) module which is exposed as `require('gridform').gridfsStream`.
 
 ## tests
 
