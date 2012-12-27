@@ -2,7 +2,7 @@
   "author": "Aaron Heckmann <aaron.heckmann+github@gmail.com>",
   "name": "gridform",
   "description": "Stream formidable uploads into MongoDB GridFS",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "keywords": ["gridfs", "formidable", "mongodb", "upload", "file"],
   "scripts": {
     "test": "make test"
