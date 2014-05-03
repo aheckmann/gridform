@@ -8,11 +8,12 @@
     "test": "make test"
   },
   "dependencies": {
-      "formidable": "1.0.11"
-    , "gridfs-stream": "0.3.1"
+      "formidable": "1.0.14"
+    , "gridfs-stream": "0.5.0"
   },
   "devDependencies": {
-      "mocha": "*"
+      "mocha": "1.18.2"
+    , "mongodb": "1.4.3"
   },
   "optionalDependencies": {},
   "engines": {
