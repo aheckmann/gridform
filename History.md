@@ -1,4 +1,9 @@
 
+0.1.6 / 2014-05-03
+==================
+
+ * updated; formidable and gridfs-stream dependencies
+
 0.1.5 / 2012-12-26
 ==================
 
