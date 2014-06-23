@@ -1,4 +1,9 @@
 
+0.1.7 / 2014-06-23
+==================
+
+ * updated; gridfs-stream@0.5.0 createWriteStream [sarakusha](https://github.com/sarakusha)
+
 0.1.6 / 2014-05-03
 ==================
 
